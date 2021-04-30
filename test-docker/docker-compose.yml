@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  mysql:
+    image: mysql:8.0.23
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_USER=test_ap
+      - MYSQL_PASSWORD=123123
+      - MYSQL_ROOT_PASSWORD=123123123
+      - MYSQL_DATABASE=test
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - 8081:3306
+
+  myAdmin:
+    image: phpmyadmin/phpmyadmin:5.1.0
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=123123123
+    ports:
+    - 8080:80

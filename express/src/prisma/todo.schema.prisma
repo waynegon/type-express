@@ -1,0 +1,42 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  userId Int @id @default(autoincrement()) @map("user_id")
+  userName String @db.VarChar(256) @map("user_name")
+  createDt  DateTime @default(now()) @map("create_dt")
+  gender String @db.VarChar(1)
+  phone Int @unique
+  email String?
+  todoMast TodoMast?
+}
+
+model TodoMast {
+  todoId    Int     @id @default(autoincrement()) @map("todo_id")
+  todoName String @db.VarChar(256) @map("todo_name")
+  createDt  DateTime @default(now()) @map("create_dt")
+  userId Int @map("user_id")
+  todoDetl TodoDetl[]
+  user User @relation(fields: [userId], references: [userId])
+
+  @@map("todo_mast")
+}
+
+model TodoDetl {
+  todoId    Int @map("todo_id")
+  todoDetlId Int @map("todo_detl_id")
+  todoDetlName String @db.VarChar(256) @map("todo_detl_name")
+  status String @db.VarChar(1) @default("O")
+  createDt  DateTime @default(now()) @map("create_dt")
+  updateDt  DateTime @updatedAt @map("update_dt")
+  todoMast TodoMast @relation(fields: [todoId], references: [todoId])
+
+  @@id([todoId, todoDetlId])
+  @@map("todo_detl")
+}
